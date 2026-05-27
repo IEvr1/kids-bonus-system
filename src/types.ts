@@ -29,7 +29,7 @@ export const CHILDREN: ChildConfig[] = [
   {
     id: 'konstantina',
     name: 'Κωνσταντίνα',
-    animal: '🐰',
+    animal: '🌈',
     themeColor: '#f472b6',
     themeColorLight: '#fce7f3',
     themeColorDark: '#db2777',
