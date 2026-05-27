@@ -38,7 +38,8 @@ export function useBonusState() {
   }, [state]);
 
   const setMaxPoints = useCallback((maxPoints: number) => {
-    const clamped = Math.max(1, Math.min(100, maxPoints));
+    if (!Number.isFinite(maxPoints)) return;
+    const clamped = Math.max(1, Math.min(100, Math.round(maxPoints)));
     setState((prev) => ({ ...prev, maxPoints: clamped }));
   }, []);
 
