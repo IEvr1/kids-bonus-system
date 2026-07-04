@@ -53,3 +53,15 @@ export const CHILDREN: ChildConfig[] = [
 ];
 
 export const ALL_CHILD_IDS: ChildId[] = CHILDREN.map((child) => child.id);
+
+export const FEEDING_INTERVAL_MS = 3 * 60 * 60 * 1000;
+
+export const FEEDING_STORAGE_KEY = 'kids-feeding-v1';
+
+export interface FeedingState {
+  lastFedAt: string | null;
+}
+
+export const DEFAULT_FEEDING_STATE: FeedingState = {
+  lastFedAt: null,
+};

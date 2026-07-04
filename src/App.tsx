@@ -2,10 +2,12 @@ import BackgroundDecor from './components/BackgroundDecor';
 import ChildCard from './components/ChildCard';
 import SettingsBar from './components/SettingsBar';
 import { useBonusState } from './hooks/useBonusState';
+import { useFeedingState } from './hooks/useFeedingState';
 import { CHILDREN } from './types';
 
 export default function App() {
   const { state, setMaxPoints, addPoint, subtractPoint, resetScores } = useBonusState();
+  const { lastFedAt, recordFeed } = useFeedingState();
 
   return (
     <div className="app">
@@ -32,6 +34,8 @@ export default function App() {
               maxPoints={state.maxPoints}
               onAdd={() => addPoint(child.id)}
               onSubtract={() => subtractPoint(child.id)}
+              lastFedAt={child.id === 'alexandros' ? lastFedAt : undefined}
+              onFeed={child.id === 'alexandros' ? recordFeed : undefined}
             />
           ))}
         </section>
