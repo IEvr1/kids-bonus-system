@@ -15,6 +15,7 @@ interface ChildCardProps {
   onSubtract: () => void;
   lastFedAt?: string | null;
   onFeed?: () => void;
+  onResetFeeding?: () => void;
 }
 
 export default function ChildCard({
@@ -25,6 +26,7 @@ export default function ChildCard({
   onSubtract,
   lastFedAt,
   onFeed,
+  onResetFeeding,
 }: ChildCardProps) {
   const [heartPulse, setHeartPulse] = useState(false);
   const [animalBounce, setAnimalBounce] = useState(false);
@@ -83,6 +85,13 @@ export default function ChildCard({
     setAnimalBounce(true);
     window.setTimeout(() => setFeedPulse(false), 600);
     window.setTimeout(() => setAnimalBounce(false), 500);
+  };
+
+  const handleResetFeeding = () => {
+    const confirmed = window.confirm('Να μηδενισθεί η ώρα σίτισης;');
+    if (confirmed) {
+      onResetFeeding?.();
+    }
   };
 
   const progress = maxPoints > 0 ? Math.min((points / maxPoints) * 100, 100) : 0;
@@ -158,6 +167,16 @@ export default function ChildCard({
 
       {showFeeding && (
         <section className="child-card__feeding" aria-label="Σίτιση Αλέξανδρου">
+          <button
+            type="button"
+            className="child-card__feeding-reset"
+            onClick={handleResetFeeding}
+            disabled={!lastFedAt}
+            aria-label="Επαναφορά ώρας σίτισης"
+          >
+            Επαναφορά
+          </button>
+
           <div className="child-card__feeding-times">
             <p className="child-card__feeding-row">
               <span className="child-card__feeding-label">Τελευταία σίτιση</span>

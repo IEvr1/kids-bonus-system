@@ -7,7 +7,7 @@ import { CHILDREN } from './types';
 
 export default function App() {
   const { state, setMaxPoints, addPoint, subtractPoint, resetScores } = useBonusState();
-  const { lastFedAt, recordFeed } = useFeedingState();
+  const { lastFedAt, recordFeed, resetFeeding } = useFeedingState();
 
   return (
     <div className="app">
@@ -36,6 +36,7 @@ export default function App() {
               onSubtract={() => subtractPoint(child.id)}
               lastFedAt={child.id === 'alexandros' ? lastFedAt : undefined}
               onFeed={child.id === 'alexandros' ? recordFeed : undefined}
+              onResetFeeding={child.id === 'alexandros' ? resetFeeding : undefined}
             />
           ))}
         </section>

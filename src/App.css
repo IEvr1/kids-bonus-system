@@ -365,9 +365,36 @@ body {
 }
 
 .child-card__feeding {
+  position: relative;
   margin-top: 1.25rem;
-  padding-top: 1.1rem;
+  padding-top: 2.25rem;
   border-top: 2px dashed color-mix(in srgb, var(--theme) 35%, transparent);
+}
+
+.child-card__feeding-reset {
+  position: absolute;
+  top: 0.65rem;
+  right: 0;
+  padding: 0.35rem 0.7rem;
+  border: 2px solid color-mix(in srgb, var(--theme) 45%, transparent);
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--theme-dark);
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+}
+
+.child-card__feeding-reset:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #fff;
+}
+
+.child-card__feeding-reset:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .child-card__feeding-times {
