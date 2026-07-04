@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import confetti from 'canvas-confetti';
 import type { ChildConfig } from '../types';
+import {
+  formatFeedingDateTime,
+  getNextFeedingAt,
+  isFeedingOverdue,
+} from '../utils/feeding';
 
 interface ChildCardProps {
   child: ChildConfig;
@@ -8,6 +13,8 @@ interface ChildCardProps {
   maxPoints: number;
   onAdd: () => void;
   onSubtract: () => void;
+  lastFedAt?: string | null;
+  onFeed?: () => void;
 }
 
 export default function ChildCard({
@@ -16,11 +23,26 @@ export default function ChildCard({
   maxPoints,
   onAdd,
   onSubtract,
+  lastFedAt,
+  onFeed,
 }: ChildCardProps) {
   const [heartPulse, setHeartPulse] = useState(false);
   const [animalBounce, setAnimalBounce] = useState(false);
+  const [feedPulse, setFeedPulse] = useState(false);
+  const [now, setNow] = useState(() => Date.now());
   const celebratedRef = useRef(false);
   const reachedGoal = points >= maxPoints;
+  const showFeeding = child.id === 'alexandros' && onFeed !== undefined;
+
+  useEffect(() => {
+    if (!showFeeding) return;
+
+    const intervalId = window.setInterval(() => {
+      setNow(Date.now());
+    }, 30_000);
+
+    return () => window.clearInterval(intervalId);
+  }, [showFeeding]);
 
   useEffect(() => {
     if (reachedGoal && !celebratedRef.current) {
@@ -55,7 +77,18 @@ export default function ChildCard({
     window.setTimeout(() => setAnimalBounce(false), 500);
   };
 
+  const handleFeed = () => {
+    onFeed?.();
+    setFeedPulse(true);
+    setAnimalBounce(true);
+    window.setTimeout(() => setFeedPulse(false), 600);
+    window.setTimeout(() => setAnimalBounce(false), 500);
+  };
+
   const progress = maxPoints > 0 ? Math.min((points / maxPoints) * 100, 100) : 0;
+  const lastFedDate = lastFedAt ? new Date(lastFedAt) : null;
+  const nextFeedingDate = getNextFeedingAt(lastFedAt ?? null);
+  const feedingOverdue = isFeedingOverdue(lastFedAt ?? null, now);
 
   return (
     <article
@@ -122,6 +155,44 @@ export default function ChildCard({
           +1
         </button>
       </div>
+
+      {showFeeding && (
+        <section className="child-card__feeding" aria-label="Σίτιση Αλέξανδρου">
+          <div className="child-card__feeding-times">
+            <p className="child-card__feeding-row">
+              <span className="child-card__feeding-label">Τελευταία σίτιση</span>
+              <span className="child-card__feeding-value">
+                {lastFedDate ? formatFeedingDateTime(lastFedDate) : '—'}
+              </span>
+            </p>
+            <p
+              className={`child-card__feeding-row ${
+                feedingOverdue ? 'child-card__feeding-row--overdue' : ''
+              }`}
+            >
+              <span className="child-card__feeding-label">Επόμενη σίτιση</span>
+              <span className="child-card__feeding-value">
+                {nextFeedingDate ? formatFeedingDateTime(nextFeedingDate) : '—'}
+              </span>
+            </p>
+          </div>
+
+          {feedingOverdue && (
+            <p className="child-card__feeding-alert">Ώρα για σίτιση! 🍼</p>
+          )}
+
+          <button
+            type="button"
+            className={`child-card__btn child-card__btn--feed ${
+              feedPulse ? 'child-card__btn--feed-pulse' : ''
+            }`}
+            onClick={handleFeed}
+            aria-label="Καταγραφή σίτισης Αλέξανδρου"
+          >
+            🍼 Έφαγε!
+          </button>
+        </section>
+      )}
     </article>
   );
 }
