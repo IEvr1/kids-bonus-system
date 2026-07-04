@@ -27,6 +27,14 @@ export const DEFAULT_STATE: BonusState = {
 
 export const CHILDREN: ChildConfig[] = [
   {
+    id: 'alexandros',
+    name: 'Αλέξανδρος',
+    animal: '🦁',
+    themeColor: '#60a5fa',
+    themeColorLight: '#dbeafe',
+    themeColorDark: '#2563eb',
+  },
+  {
     id: 'konstantina',
     name: 'Κωνσταντίνα',
     animal: '🌈',
@@ -41,14 +49,6 @@ export const CHILDREN: ChildConfig[] = [
     themeColor: '#fb923c',
     themeColorLight: '#ffedd5',
     themeColorDark: '#ea580c',
-  },
-  {
-    id: 'alexandros',
-    name: 'Αλέξανδρος',
-    animal: '🦁',
-    themeColor: '#60a5fa',
-    themeColorLight: '#dbeafe',
-    themeColorDark: '#2563eb',
   },
 ];
 

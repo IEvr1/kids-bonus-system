@@ -31,8 +31,13 @@ export function useFeedingState() {
     setState({ lastFedAt: new Date().toISOString() });
   }, []);
 
+  const resetFeeding = useCallback(() => {
+    setState({ ...DEFAULT_FEEDING_STATE });
+  }, []);
+
   return {
     lastFedAt: state.lastFedAt,
     recordFeed,
+    resetFeeding,
   };
 }
