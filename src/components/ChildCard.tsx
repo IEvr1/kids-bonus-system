@@ -14,7 +14,8 @@ interface ChildCardProps {
   onAdd: () => void;
   onSubtract: () => void;
   lastFedAt?: string | null;
-  onFeed?: () => void;
+  lastMilkMl?: number | null;
+  onFeed?: (milkMl: number) => void;
   onResetFeeding?: () => void;
 }
 
@@ -25,12 +26,16 @@ export default function ChildCard({
   onAdd,
   onSubtract,
   lastFedAt,
+  lastMilkMl,
   onFeed,
   onResetFeeding,
 }: ChildCardProps) {
   const [heartPulse, setHeartPulse] = useState(false);
   const [animalBounce, setAnimalBounce] = useState(false);
   const [feedPulse, setFeedPulse] = useState(false);
+  const [milkDraft, setMilkDraft] = useState(() =>
+    lastMilkMl != null ? String(lastMilkMl) : '',
+  );
   const [now, setNow] = useState(() => Date.now());
   const celebratedRef = useRef(false);
   const reachedGoal = points >= maxPoints;
@@ -45,6 +50,12 @@ export default function ChildCard({
 
     return () => window.clearInterval(intervalId);
   }, [showFeeding]);
+
+  useEffect(() => {
+    if (lastMilkMl != null) {
+      setMilkDraft(String(lastMilkMl));
+    }
+  }, [lastMilkMl]);
 
   useEffect(() => {
     if (reachedGoal && !celebratedRef.current) {
@@ -80,7 +91,19 @@ export default function ChildCard({
   };
 
   const handleFeed = () => {
-    onFeed?.();
+    const trimmed = milkDraft.trim();
+    if (trimmed === '') {
+      window.alert('Βάλε ποσότητα γάλατος σε ml.');
+      return;
+    }
+
+    const parsed = Number.parseInt(trimmed, 10);
+    if (Number.isNaN(parsed) || parsed <= 0) {
+      window.alert('Η ποσότητα γάλατος πρέπει να είναι θετικός αριθμός σε ml.');
+      return;
+    }
+
+    onFeed?.(parsed);
     setFeedPulse(true);
     setAnimalBounce(true);
     window.setTimeout(() => setFeedPulse(false), 600);
@@ -88,9 +111,10 @@ export default function ChildCard({
   };
 
   const handleResetFeeding = () => {
-    const confirmed = window.confirm('Να μηδενισθεί η ώρα σίτισης;');
+    const confirmed = window.confirm('Να μηδενισθούν η ώρα σίτισης και τα ml γάλατος;');
     if (confirmed) {
       onResetFeeding?.();
+      setMilkDraft('');
     }
   };
 
@@ -194,11 +218,39 @@ export default function ChildCard({
                 {nextFeedingDate ? formatFeedingDateTime(nextFeedingDate) : '—'}
               </span>
             </p>
+            <p className="child-card__feeding-row">
+              <span className="child-card__feeding-label">Τελευταίο γάλα</span>
+              <span className="child-card__feeding-value">
+                {lastMilkMl != null ? `${lastMilkMl} ml` : '—'}
+              </span>
+            </p>
           </div>
 
           {feedingOverdue && (
             <p className="child-card__feeding-alert">Ώρα για σίτιση! 🍼</p>
           )}
+
+          <div className="child-card__feeding-input">
+            <label className="child-card__feeding-input-label" htmlFor={`milk-ml-${child.id}`}>
+              Γάλα (ml)
+            </label>
+            <input
+              id={`milk-ml-${child.id}`}
+              className="child-card__feeding-input-field"
+              type="number"
+              min={1}
+              max={1000}
+              inputMode="numeric"
+              placeholder="π.χ. 120"
+              value={milkDraft}
+              onChange={(event) => setMilkDraft(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  handleFeed();
+                }
+              }}
+            />
+          </div>
 
           <button
             type="button"

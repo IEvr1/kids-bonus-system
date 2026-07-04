@@ -439,6 +439,41 @@ body {
   animation: celebrationPop 0.5s ease;
 }
 
+.child-card__feeding-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.child-card__feeding-input-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6b5b7a;
+}
+
+.child-card__feeding-input-field {
+  width: 6.5rem;
+  padding: 0.5rem 0.65rem;
+  border: 2px solid color-mix(in srgb, var(--theme) 45%, transparent);
+  border-radius: 0.75rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--theme-dark);
+  background: #fff;
+}
+
+.child-card__feeding-input-field:focus {
+  outline: 3px solid color-mix(in srgb, var(--theme) 35%, transparent);
+  border-color: var(--theme);
+}
+
 .child-card__btn--feed {
   width: 100%;
   min-height: 3.1rem;
