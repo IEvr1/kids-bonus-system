@@ -13,8 +13,12 @@ function loadFeedingState(): FeedingState {
     const parsed = JSON.parse(raw) as Partial<FeedingState>;
     const lastFedAt =
       typeof parsed.lastFedAt === 'string' ? parsed.lastFedAt : null;
+    const lastMilkMl =
+      typeof parsed.lastMilkMl === 'number' && parsed.lastMilkMl > 0
+        ? Math.round(parsed.lastMilkMl)
+        : null;
 
-    return { lastFedAt };
+    return { lastFedAt, lastMilkMl };
   } catch {
     return DEFAULT_FEEDING_STATE;
   }
@@ -27,8 +31,12 @@ export function useFeedingState() {
     localStorage.setItem(FEEDING_STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
-  const recordFeed = useCallback(() => {
-    setState({ lastFedAt: new Date().toISOString() });
+  const recordFeed = useCallback((milkMl: number) => {
+    const clampedMl = Math.max(1, Math.min(1000, Math.round(milkMl)));
+    setState({
+      lastFedAt: new Date().toISOString(),
+      lastMilkMl: clampedMl,
+    });
   }, []);
 
   const resetFeeding = useCallback(() => {
@@ -37,6 +45,7 @@ export function useFeedingState() {
 
   return {
     lastFedAt: state.lastFedAt,
+    lastMilkMl: state.lastMilkMl,
     recordFeed,
     resetFeeding,
   };

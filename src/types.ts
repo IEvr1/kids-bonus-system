@@ -60,8 +60,10 @@ export const FEEDING_STORAGE_KEY = 'kids-feeding-v1';
 
 export interface FeedingState {
   lastFedAt: string | null;
+  lastMilkMl: number | null;
 }
 
 export const DEFAULT_FEEDING_STATE: FeedingState = {
   lastFedAt: null,
+  lastMilkMl: null,
 };
